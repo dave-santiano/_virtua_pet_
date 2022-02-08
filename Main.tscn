@@ -1,0 +1,153 @@
+[gd_scene load_steps=17 format=2]
+
+[ext_resource path="res://Pet.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Main.gd" type="Script" id=2]
+[ext_resource path="res://pet_assets/background-day-v2.png" type="Texture" id=3]
+[ext_resource path="res://pet_assets/background-afternoon-v2.png" type="Texture" id=4]
+[ext_resource path="res://pet_assets/background-night-v2.png" type="Texture" id=5]
+[ext_resource path="res://Fridge.tscn" type="PackedScene" id=6]
+[ext_resource path="res://fonts/Apple II Pro.otf" type="DynamicFontData" id=7]
+[ext_resource path="res://Clock.tscn" type="PackedScene" id=8]
+[ext_resource path="res://Mail.tscn" type="PackedScene" id=9]
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 4 ) ],
+"loop": true,
+"name": "afternoon",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 3 ) ],
+"loop": true,
+"name": "day",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 5 ) ],
+"loop": true,
+"name": "night",
+"speed": 5.0
+} ]
+
+[sub_resource type="DynamicFont" id=3]
+font_data = ExtResource( 7 )
+
+[sub_resource type="DynamicFont" id=2]
+size = 36
+font_data = ExtResource( 7 )
+
+[sub_resource type="DynamicFont" id=4]
+font_data = ExtResource( 7 )
+
+[sub_resource type="DynamicFont" id=5]
+font_data = ExtResource( 7 )
+
+[sub_resource type="DynamicFontData" id=6]
+font_path = "res://fonts/Apple II Pro.otf"
+
+[sub_resource type="DynamicFont" id=7]
+font_data = SubResource( 6 )
+
+[node name="Main" type="Node"]
+script = ExtResource( 2 )
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+color = Color( 0, 0.0235294, 0.639216, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Background" type="AnimatedSprite" parent="."]
+position = Vector2( 641.912, 361.5 )
+scale = Vector2( 5.925, 5.925 )
+frames = SubResource( 1 )
+animation = "day"
+
+[node name="DebugText" type="Label" parent="."]
+margin_left = 124.0
+margin_top = 24.0
+margin_right = 476.0
+margin_bottom = 61.0
+rect_scale = Vector2( 1.60671, 2.00692 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 3 )
+text = "
+"
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Button" type="Button" parent="."]
+margin_left = 1109.0
+margin_top = 27.0
+margin_right = 1333.0
+margin_bottom = 90.0
+rect_scale = Vector2( 0.449964, 0.680574 )
+focus_mode = 0
+custom_fonts/font = SubResource( 2 )
+enabled_focus_mode = 0
+text = "DEBUG"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Fridge" parent="." instance=ExtResource( 6 )]
+position = Vector2( 1074, 412 )
+scale = Vector2( 2, 3 )
+
+[node name="Clock" parent="." instance=ExtResource( 8 )]
+position = Vector2( 226, 511 )
+scale = Vector2( 2, 2 )
+
+[node name="Pet" parent="." instance=ExtResource( 1 )]
+position = Vector2( 961, 519 )
+scale = Vector2( 5, 5 )
+
+[node name="CreateServer" type="Button" parent="."]
+margin_left = 1072.0
+margin_top = 77.0
+margin_right = 1266.0
+margin_bottom = 122.0
+custom_fonts/font = SubResource( 4 )
+text = "Create Server"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="JoinServer" type="Button" parent="."]
+margin_left = 1082.0
+margin_top = 130.0
+margin_right = 1248.0
+margin_bottom = 176.0
+custom_fonts/font = SubResource( 5 )
+text = "Join Server"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Server_ip_address" type="LineEdit" parent="."]
+margin_left = 1059.0
+margin_top = 185.0
+margin_right = 1266.0
+margin_bottom = 233.0
+custom_fonts/font = SubResource( 7 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Mail" parent="." instance=ExtResource( 9 )]
+visible = false
+position = Vector2( 620.344, 394.223 )
+scale = Vector2( 5, 5 )
+
+[connection signal="afternoon_started" from="." to="Pet" method="_on_Main_afternoon_started"]
+[connection signal="message_received" from="." to="Pet" method="_on_Main_message_received"]
+[connection signal="night_started" from="." to="Pet" method="_on_Main_night_started"]
+[connection signal="button_up" from="Button" to="." method="_on_Button_button_up"]
+[connection signal="eaten" from="Fridge" to="Pet" method="_on_Fridge_eaten"]
+[connection signal="pressed" from="CreateServer" to="." method="_on_CreateServer_pressed"]
+[connection signal="pressed" from="JoinServer" to="." method="_on_JoinServer_pressed"]
+[connection signal="mail_clicked" from="Mail" to="." method="_on_Mail_mail_clicked"]
