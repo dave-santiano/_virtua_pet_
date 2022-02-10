@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/aruarian.mp3-a5765d5c4056ec32f9c68bf3f91f74db.mp3str"
+
+[deps]
+
+source_file="res://sounds/aruarian.mp3"
+dest_files=[ "res://.import/aruarian.mp3-a5765d5c4056ec32f9c68bf3f91f74db.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0

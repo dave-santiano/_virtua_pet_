@@ -1,14 +1,16 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://Pet.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Main.gd" type="Script" id=2]
-[ext_resource path="res://pet_assets/background-day-v2.png" type="Texture" id=3]
-[ext_resource path="res://pet_assets/background-afternoon-v2.png" type="Texture" id=4]
-[ext_resource path="res://pet_assets/background-night-v2.png" type="Texture" id=5]
+[ext_resource path="res://pet_assets/background-day-v3.png" type="Texture" id=3]
+[ext_resource path="res://pet_assets/background-afternoon-v3.png" type="Texture" id=4]
+[ext_resource path="res://pet_assets/background-night-v3.png" type="Texture" id=5]
 [ext_resource path="res://Fridge.tscn" type="PackedScene" id=6]
 [ext_resource path="res://fonts/Apple II Pro.otf" type="DynamicFontData" id=7]
 [ext_resource path="res://Clock.tscn" type="PackedScene" id=8]
 [ext_resource path="res://Mail.tscn" type="PackedScene" id=9]
+[ext_resource path="res://sounds/select_sound.wav" type="AudioStream" id=10]
+[ext_resource path="res://sounds/aruarian.mp3" type="AudioStream" id=11]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -47,6 +49,12 @@ font_path = "res://fonts/Apple II Pro.otf"
 [sub_resource type="DynamicFont" id=7]
 font_data = SubResource( 6 )
 
+[sub_resource type="DynamicFont" id=8]
+font_data = ExtResource( 7 )
+
+[sub_resource type="DynamicFont" id=9]
+font_data = ExtResource( 7 )
+
 [node name="Main" type="Node"]
 script = ExtResource( 2 )
 
@@ -81,32 +89,32 @@ __meta__ = {
 }
 
 [node name="Button" type="Button" parent="."]
-margin_left = 1109.0
-margin_top = 27.0
-margin_right = 1333.0
-margin_bottom = 90.0
+margin_left = 1019.49
+margin_top = 21.4853
+margin_right = 1561.49
+margin_bottom = 101.485
 rect_scale = Vector2( 0.449964, 0.680574 )
 focus_mode = 0
 custom_fonts/font = SubResource( 2 )
 enabled_focus_mode = 0
-text = "DEBUG"
+text = "debug/demo menu"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Fridge" parent="." instance=ExtResource( 6 )]
-position = Vector2( 1074, 412 )
-scale = Vector2( 2, 3 )
+position = Vector2( 975.112, 456.949 )
+scale = Vector2( 2, 2 )
 
 [node name="Clock" parent="." instance=ExtResource( 8 )]
 position = Vector2( 226, 511 )
 scale = Vector2( 2, 2 )
 
 [node name="Pet" parent="." instance=ExtResource( 1 )]
-position = Vector2( 961, 519 )
-scale = Vector2( 5, 5 )
+position = Vector2( 602.905, 521.997 )
 
 [node name="CreateServer" type="Button" parent="."]
+visible = false
 margin_left = 1072.0
 margin_top = 77.0
 margin_right = 1266.0
@@ -118,6 +126,7 @@ __meta__ = {
 }
 
 [node name="JoinServer" type="Button" parent="."]
+visible = false
 margin_left = 1082.0
 margin_top = 130.0
 margin_right = 1248.0
@@ -129,6 +138,7 @@ __meta__ = {
 }
 
 [node name="Server_ip_address" type="LineEdit" parent="."]
+visible = false
 margin_left = 1059.0
 margin_top = 185.0
 margin_right = 1266.0
@@ -143,11 +153,81 @@ visible = false
 position = Vector2( 620.344, 394.223 )
 scale = Vector2( 5, 5 )
 
+[node name="SendMail" type="Button" parent="."]
+visible = false
+margin_left = 225.0
+margin_top = 648.0
+margin_right = 396.0
+margin_bottom = 704.0
+custom_fonts/font = SubResource( 8 )
+text = "Send Letter"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ReceiveMailDummy" type="Button" parent="."]
+margin_left = 21.7419
+margin_top = 651.567
+margin_right = 201.742
+margin_bottom = 700.567
+custom_fonts/font = SubResource( 9 )
+text = "Receive Mail"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DemoSleepy" type="Button" parent="."]
+margin_left = 220.0
+margin_top = 651.0
+margin_right = 413.0
+margin_bottom = 701.0
+custom_fonts/font = SubResource( 9 )
+text = "Toggle Sleepy"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ToggleBGM" type="Button" parent="."]
+margin_left = 707.0
+margin_top = 650.0
+margin_right = 905.0
+margin_bottom = 703.0
+custom_fonts/font = SubResource( 9 )
+text = "Toggle BGM"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CycleTimeOfDay" type="Button" parent="."]
+margin_left = 434.502
+margin_top = 648.753
+margin_right = 628.502
+margin_bottom = 701.753
+custom_fonts/font = SubResource( 9 )
+text = "Cycle Time Of Day"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 10 )
+
+[node name="bgm" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 11 )
+volume_db = -35.904
+
 [connection signal="afternoon_started" from="." to="Pet" method="_on_Main_afternoon_started"]
 [connection signal="message_received" from="." to="Pet" method="_on_Main_message_received"]
 [connection signal="night_started" from="." to="Pet" method="_on_Main_night_started"]
 [connection signal="button_up" from="Button" to="." method="_on_Button_button_up"]
 [connection signal="eaten" from="Fridge" to="Pet" method="_on_Fridge_eaten"]
+[connection signal="input_event" from="Fridge" to="Fridge" method="_on_Fridge_input_event"]
+[connection signal="clock_touched" from="Clock" to="Pet" method="_on_Clock_clock_touched"]
 [connection signal="pressed" from="CreateServer" to="." method="_on_CreateServer_pressed"]
 [connection signal="pressed" from="JoinServer" to="." method="_on_JoinServer_pressed"]
+[connection signal="input_event" from="Mail" to="Mail" method="_on_Mail_input_event"]
 [connection signal="mail_clicked" from="Mail" to="." method="_on_Mail_mail_clicked"]
+[connection signal="pressed" from="ReceiveMailDummy" to="." method="_on_ReceiveMailDummy_pressed"]
+[connection signal="pressed" from="DemoSleepy" to="." method="_on_DemoSleepy_pressed"]
+[connection signal="pressed" from="ToggleBGM" to="." method="_on_ToggleBGM_pressed"]
+[connection signal="pressed" from="CycleTimeOfDay" to="." method="_on_CycleTimeOfDay_pressed"]

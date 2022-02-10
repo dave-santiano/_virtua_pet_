@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/pet_sound.wav-96b715ffd867b1c864bb0319213c59bd.sample"
+
+[deps]
+
+source_file="res://sounds/pet_sound.wav"
+dest_files=[ "res://.import/pet_sound.wav-96b715ffd867b1c864bb0319213c59bd.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

@@ -7,6 +7,7 @@ var time
 var time_return
 var is_hungry
 var is_night
+var is_sleepy
 
 var on_pet
 
@@ -17,14 +18,17 @@ var random_position
 var velocity
 
 var dummy_messages = ["Hey! I miss you :D", "Take it easy on yourself!", "Jury summons"]
-var interaction_phrases = ["Hey there! Nice to see you", "Sam is doing great from what I hear!"]
+var interaction_phrases = ["Hey there!", "Hi!", "What's up?", "I could use a chair", "I wonder if there's any mail today?", "Sam is feeding me more, you know."]
 
 func _ready():
 	screen_size = get_viewport_rect().size
 	is_moving = false
 	is_hungry = false
+	is_sleepy = false
 	on_pet = false
 	velocity = Vector2.ZERO
+	$LetterSendMenu.hide()
+
 
 func _process(delta):
 	idle_movement(delta)
@@ -47,13 +51,20 @@ func _process(delta):
 		
 		
 	if(sleepiness_level <= 20):
-#		print("passed out")
-		if(sleepiness_level <= 0):
-			sleepiness_level = 0
+		sleepiness_level = 0
+		is_sleepy = true
+		is_moving = false
+	else:
+		is_sleepy = false
+
+		
+		
 
 func _input(event):
-	if(Input.is_action_just_released("house_object_select") && on_pet == true):
-		$DialogueBox.talk(["Hey there!"])
+	pass
+#	if(Input.is_action_just_released("house_object_select") && on_pet == true):
+#		$DialogueBox.talk(["Hey there!"])
+#		$LetterSendMenu.show()
 
 func _on_Main_afternoon_started():
 	pass # Replace with function body.
@@ -61,13 +72,15 @@ func _on_Main_afternoon_started():
 func _on_Main_message_received():
 	randomize()
 	var random_choice = rand_range(0, 3)
-	$DialogueBox.talk(["You received a message!", dummy_messages[random_choice], "Okay, goodbye!"])
+	$DialogueBox.talk(["You received a message!", dummy_messages[random_choice] + '\n' + "-Sam", "It's nice to get letters."])
 
 func _on_DialogueBox_dialogue_exit():
 	pass # Replace with function body.
 
 func _on_HungerMessageTimer_timeout():
 	$DialogueBox.talk(["I'm hungry", "Please feed me!"])
+	if not $AudioStreamPlayer.playing:
+		$AudioStreamPlayer.play()
 	$AnimatedSprite.animation = "sad"
 
 func _on_Main_night_started():
@@ -83,8 +96,23 @@ func _on_Fridge_eaten():
 	hunger_level += 50
 
 func _on_Pet_input_event(viewport, event, shape_idx):
-	#TO-DO add some casual dialogue from the pet
-	pass
+	if event is InputEventScreenTouch:
+		if not event.is_pressed():
+			var music_player = get_parent().get_node("AudioStreamPlayer")
+			if(not music_player.playing):
+				music_player.play()
+			randomize()
+			var casual_dialogue_roll = rand_range(0, 6)
+			$DialogueBox.talk(interaction_phrases[casual_dialogue_roll])
+#			$LetterSendMenu/SendLetter.show()
+	if event is InputEventMouseButton:
+		if not event.is_pressed():
+			var music_player = get_parent().get_node("AudioStreamPlayer")
+			if(not music_player.playing):
+				music_player.play()
+			randomize()
+			var casual_dialogue_roll = rand_range(0, 6)
+			$DialogueBox.talk([interaction_phrases[casual_dialogue_roll]])
 		
 func _on_MovementTimer_timeout():
 	randomize()
@@ -99,7 +127,7 @@ func _on_MovementTimer_timeout():
 #	print($AnimatedSprite.animation)
 
 func idle_movement(delta):
-	if(is_moving):
+	if(is_moving && not is_sleepy):
 		velocity = Vector2.ZERO
 		if(position.x - random_position > 0):
 			$AnimatedSprite.animation = "left"
@@ -120,8 +148,11 @@ func idle_movement(delta):
 		position.x = clamp(position.x, 0, screen_size.x)
 		
 	else:
-		if(is_hungry):
+		if(is_hungry && not is_sleepy):
 			$AnimatedSprite.animation = "sad"
+			velocity = Vector2.ZERO
+		elif(is_sleepy):
+			$AnimatedSprite.animation = "sleepy"
 			velocity = Vector2.ZERO
 		else:
 			$AnimatedSprite.animation = "idle"
@@ -132,8 +163,25 @@ func _on_Pet_mouse_entered():
 	on_pet = true
 	print(on_pet)
 
-
 func _on_Pet_mouse_exited():
 	on_pet = false
 	print(on_pet)
+
+
+func _on_SendLetter_pressed():
+	$DialogueBox.talk(["Oh! You want to send a letter?"])
+	$LetterSendMenu.hide()
 	
+
+func _on_LetterSend_focus_entered():
+	if Input.is_action_pressed("ui_accept"):
+		$LetterSendMenu/LetterSend.text = ""
+		$LetterSendMenu.hide()
+
+
+func _on_Clock_clock_touched():
+	var time = OS.get_time()
+	if(time.minute < 10):
+		$DialogueBox.talk(["It's 06:" + "0" +  str(time.minute)+ "PM where Sam is.", "It is also raining over there!", "Tell him to use an umbrella."])
+	else:	
+		$DialogueBox.talk(["It's 06:" + str(time.minute) + "PM where Sam is.", "It is also raining over there!", "Tell him to use an umbrella."])

@@ -24,3 +24,8 @@ func _on_Mail_mouse_entered():
 
 func _on_Mail_mouse_exited():
 	on_mail = false
+
+func _on_Mail_input_event(viewport, event, shape_idx):
+	if event is InputEventScreenTouch:
+		if not event.is_pressed():
+			emit_signal("mail_clicked")

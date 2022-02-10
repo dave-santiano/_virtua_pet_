@@ -10,8 +10,8 @@ signal morning_started
 signal afternoon_started
 signal message_received
 
-
-
+var background_anims = ["day", "afternoon", "night"]
+var background_anim_cycle_counter = 0;
 var device_ip_address
 onready var server_ip_address = $Server_ip_address
 
@@ -27,29 +27,39 @@ func _ready():
 func _process(delta):
 	if(DEBUG_MODE_ON):
 #		$DebugText.text = str($Pet.hunger_level + '\n' + $Pet.sleepiness_level)
-		$DebugText.text = "Hunger level: " + str($Pet.hunger_level) + '\n' + "Sleepiness level: " + str($Pet.sleepiness_level) + '\n' + str(device_ip_address)
-		$JoinServer.show()
-		$Server_ip_address.show()
-		$CreateServer.show()
+#		$DebugText.text = "Hunger level: " + str($Pet.hunger_level) + '\n' + "Sleepiness level: " + str($Pet.sleepiness_level) + '\n' + str(device_ip_address)
+		$DebugText.text = "Hunger level: " + str($Pet.hunger_level) + '\n' + "Sleepiness level: " + str($Pet.sleepiness_level)
+#		$JoinServer.show()
+#		$Server_ip_address.show()
+#		$CreateServer.show()
+		$ReceiveMailDummy.show()
+		$DemoSleepy.show()
+		$CycleTimeOfDay.show()
+		$ToggleBGM.show()
+		
 #		print($DebugText.)
 #		$DebugText.text = "TEST DEBUG"
 	else:
-		$JoinServer.hide()
-		$Server_ip_address.hide()
-		$CreateServer.hide()
+#		$JoinServer.hide()
+#		$Server_ip_address.hide()
+#		$CreateServer.hide()
+		$ReceiveMailDummy.hide()
+		$DemoSleepy.hide()		
+		$CycleTimeOfDay.hide()
+		$ToggleBGM.hide()		
 		$DebugText.text = ""
 	
-	if(time.hour >= 20 || time.hour < 6):
-		$Background.animation = "night"
-		emit_signal("night_started")
-	
-	elif(time.hour >= 6 && time.hour < 13):
-		$Background.animation = "day"
-		emit_signal("morning_started")
-	
-	elif(time.hour >= 13 && time.hour < 20):
-		$Background.animation = "afternoon"
-		emit_signal("afternoon_started")
+		if(time.hour >= 20 || time.hour < 6):
+			$Background.animation = "night"
+			emit_signal("night_started")
+		
+		elif(time.hour >= 6 && time.hour < 13):
+			$Background.animation = "day"
+			emit_signal("morning_started")
+		
+		elif(time.hour >= 13 && time.hour < 20):
+			$Background.animation = "afternoon"
+			emit_signal("afternoon_started")
 		
 #	if(got_message):
 #		emit_signal("message_received")
@@ -90,5 +100,33 @@ func read_dummy_message():
 
 func _on_Mail_mail_clicked():
 	emit_signal("message_received")
+	if(not $AudioStreamPlayer.playing):
+		$AudioStreamPlayer.play()
 	$Mail.hide()
 	
+func _on_ReceiveMailDummy_pressed():
+	$Mail.show()
+	got_message = true
+
+
+func _on_DemoSleepy_pressed():
+	if($Pet.is_sleepy):
+		$Pet.sleepiness_level = 100
+	else:
+		$Pet.sleepiness_level = 0
+
+
+func _on_CycleTimeOfDay_pressed():
+	background_anim_cycle_counter += 1
+	if(background_anim_cycle_counter >= 3):
+		background_anim_cycle_counter = 0
+	$Background.animation = background_anims[background_anim_cycle_counter]
+
+	
+
+
+func _on_ToggleBGM_pressed():
+	if not $bgm.playing:
+		$bgm.play()
+	else:
+		$bgm.stop()

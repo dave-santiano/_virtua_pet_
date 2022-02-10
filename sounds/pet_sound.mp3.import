@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/pet_sound.mp3-a3007f2748322a668c9719a6baab33db.mp3str"
+
+[deps]
+
+source_file="res://sounds/pet_sound.mp3"
+dest_files=[ "res://.import/pet_sound.mp3-a3007f2748322a668c9719a6baab33db.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0
