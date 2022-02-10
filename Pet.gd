@@ -1,6 +1,6 @@
 extends Area2D
 
-export var hunger_level = 100
+export var hunger_level = 150
 var sleepiness_level = 100
 var time_elapsed
 var time
@@ -185,3 +185,9 @@ func _on_Clock_clock_touched():
 		$DialogueBox.talk(["It's 06:" + "0" +  str(time.minute)+ "PM where Sam is.", "It is also raining over there!", "Tell him to use an umbrella."])
 	else:	
 		$DialogueBox.talk(["It's 06:" + str(time.minute) + "PM where Sam is.", "It is also raining over there!", "Tell him to use an umbrella."])
+
+
+func _on_Egg_hatched():
+	self.show()
+	self.position.x = get_viewport_rect().size.x / 2
+#	self.position.x = 
